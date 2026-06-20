@@ -1,12 +1,14 @@
 # Ranch Ledger
 
-Ranch Ledger is a ranch-scoped operations platform. Sprint 1 provides email/password authentication, secure SSR sessions, ranch onboarding, and the Ranch Administrator dashboard foundation.
+Ranch Ledger is a ranch-scoped operations platform. The current foundation provides secure authentication, ranch onboarding, and administrator setup for employees, horses, trails, and activity types.
 
 ## Local setup
 
 1. Create a Supabase project.
 2. Copy `.env.example` to `.env.local` and add the project URL and publishable key from **Project Settings → API**.
-3. Apply `supabase/migrations/20260620000000_sprint_1_foundation.sql` with the Supabase CLI or SQL Editor.
+3. Apply the migrations in order with the Supabase CLI or SQL Editor:
+   - `supabase/migrations/20260620000000_sprint_1_foundation.sql`
+   - `supabase/migrations/20260620010000_sprint_2_ranch_setup.sql`
 4. In **Authentication → URL Configuration**, set the local Site URL to `http://localhost:3000` and add `http://localhost:3000/auth/callback` as an allowed redirect URL. Add the equivalent production callback before deployment.
 5. Install dependencies and start the app:
 

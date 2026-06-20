@@ -17,7 +17,7 @@ export default async function DashboardPage() {
       <p className="text-sm font-semibold text-primary">Ranch Administrator</p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight">Good to see you, {firstName}.</h1>
       <p className="mt-2 mb-8 text-muted-foreground">{context.ranch ? "Your ranch workspace is ready." : "Let’s finish the foundation for your ranch."}</p>
-      {context.ranch ? <WelcomePanel ranch={context.ranch} /> : <SetupChecklist />}
+      {context.ranch && context.setupProgress ? <WelcomePanel ranch={context.ranch} progress={context.setupProgress} /> : <SetupChecklist />}
     </main>
   );
 }
