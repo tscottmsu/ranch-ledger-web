@@ -240,3 +240,331 @@ A Guest has ride/activity history.
 The Head Wrangler should only see Guests relevant to current operations, such as Guests who are checked in, ready for assignment, or currently assigned to an activity.
 
 Guest login may be added later, but it is not part of the MVP.
+
+# Employee
+
+## Description
+
+An Employee is a ranch staff member.
+
+Employees are operational records and do not automatically receive login access.
+
+An Employee may optionally be linked to a User account if they require access to Ranch Ledger.
+
+---
+
+## Created By
+
+Ranch Administrator
+
+---
+
+## Managed By
+
+Ranch Administrator
+
+Head Wrangler (limited operational fields)
+
+---
+
+## Used By
+
+- Ranch Administrator
+- Head Wrangler
+- Operations
+- Reports
+
+---
+
+## Relationships
+
+An Employee belongs to one Ranch.
+
+An Employee may optionally have one User account.
+
+An Employee may lead many Activities.
+
+An Employee may have certifications.
+
+An Employee may have a work schedule.
+
+---
+
+## Typical Information
+
+- First Name
+- Last Name
+- Nickname
+- Phone
+- Email
+- Position
+- Employment Status
+- Hire Date
+- Notes
+
+---
+
+## Employee Positions
+
+Examples:
+
+- Head Wrangler
+- Wrangler
+- Assistant Wrangler
+- Fishing Guide
+- Hiking Guide
+- Ranch Manager
+- Office Staff
+- Maintenance
+
+---
+
+## Operational Information
+
+Employees may have:
+
+- Certifications
+- Trail Qualifications
+- Activity Qualifications
+- Availability
+- Work Schedule
+
+---
+
+## Login Access
+
+Employees are not required to have login accounts.
+
+Examples:
+
+Head Wrangler
+
+✓ Login Account
+
+Wrangler
+
+Optional
+
+Seasonal Wrangler
+
+Usually no login
+
+Office Staff
+
+Optional
+
+This allows Ranch Ledger to manage employees without requiring every employee to be a software user.
+
+# Employee
+
+## Description
+
+An Employee is a ranch staff member.
+
+Employees are operational records and do not automatically receive login access.
+
+An Employee may optionally be linked to a User account if they require access to Ranch Ledger.
+
+---
+
+## Created By
+
+Ranch Administrator
+
+---
+
+## Managed By
+
+- Ranch Administrator
+- Head Wrangler for limited operational fields
+
+---
+
+## Used By
+
+- Ranch Administrator
+- Head Wrangler
+- Operations
+- Reports
+
+---
+
+## Relationships
+
+An Employee belongs to one Ranch.
+
+An Employee may optionally have one User account.
+
+An Employee may lead many Activities.
+
+An Employee may have certifications.
+
+An Employee may have a work schedule.
+
+---
+
+## Typical Information
+
+- First Name
+- Last Name
+- Nickname
+- Phone
+- Email
+- Position
+- Employment Status
+- Hire Date
+- Notes
+
+---
+
+## Employee Positions
+
+Examples:
+
+- Head Wrangler
+- Wrangler
+- Assistant Wrangler
+- Fishing Guide
+- Hiking Guide
+- Ranch Manager
+- Office Staff
+- Maintenance
+
+---
+
+## Operational Information
+
+Employees may have:
+
+- Certifications
+- Trail Qualifications
+- Activity Qualifications
+- Availability
+- Work Schedule
+
+---
+
+## Login Access
+
+Employees are not required to have login accounts.
+
+Examples:
+
+- Head Wrangler usually has a login account.
+- Wrangler may or may not have a login account.
+- Seasonal Wrangler usually does not have a login account.
+- Office Staff may or may not have a login account.
+
+This allows Ranch Ledger to manage employees without requiring every employee to be a software user.
+
+# User
+
+## Description
+
+A User is a person with login access to Ranch Ledger.
+
+Users authenticate through Supabase Auth.
+
+A User may optionally be linked to an Employee record.
+
+---
+
+## Created By
+
+- Ranch Administrator
+- Platform onboarding
+
+---
+
+## Managed By
+
+- Ranch Administrator
+- Platform Administrator for support/billing-level issues
+
+---
+
+## Used By
+
+- Authentication
+- Permissions
+- Audit history
+- Operations
+- Administration
+
+---
+
+## Relationships
+
+A User may belong to one or more Ranches through Ranch Memberships.
+
+A User may optionally be linked to one Employee record per Ranch.
+
+A User has one software role per Ranch.
+
+---
+
+## Typical Information
+
+- Email
+- First Name
+- Last Name
+- Phone
+- Avatar
+- Active Status
+
+---
+
+## Notes
+
+Users are for system access.
+
+Employees are for ranch operations.
+
+A person can be both an Employee and a User, but they do not have to be.
+
+# Ranch Membership
+
+## Description
+
+A Ranch Membership connects a User to a Ranch and defines that User's software permissions inside that Ranch.
+
+---
+
+## Created By
+
+Ranch Administrator
+
+---
+
+## Managed By
+
+Ranch Administrator
+
+---
+
+## Relationships
+
+A Ranch Membership belongs to one Ranch.
+
+A Ranch Membership belongs to one User.
+
+A Ranch Membership may optionally link to one Employee record.
+
+---
+
+## Software Roles
+
+- ranch_administrator
+- head_wrangler
+- wrangler
+- viewer
+
+---
+
+## Notes
+
+Software roles control access.
+
+Employee positions describe real-world job titles.
+
+These should remain independent.
