@@ -350,6 +350,121 @@ Constraints:
 Notes:
 Horse assignments are activity-specific, not permanently tied to the guest.
 
+## Table: assignment_checks
+
+Purpose:
+Stores warnings and blocking issues found when building an activity assignment.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid not null references activities(id) on delete cascade
+- check_type text not null
+- severity text not null
+- message text not null
+- related_guest_id uuid references guests(id) on delete set null
+- related_employee_id uuid references employees(id) on delete set null
+- related_horse_id uuid references horses(id) on delete set null
+- related_trail_id uuid references trails(id) on delete set null
+- resolved boolean not null default false
+- resolved_by uuid references profiles(id) on delete set null
+- resolved_at timestamptz
+- created_at timestamptz default now()
+
+Severities:
+- pass
+- warning
+- block
+
+Examples:
+- Guest already rode this trail.
+- Guest experience may be too low.
+- Horse already assigned.
+- Wrangler already assigned.
+- Horse exceeds rider weight limit.
+
+## Table: incidents
+
+Purpose:
+Stores safety, operational, medical, or behavior incidents tied to an activity, guest, employee, horse, or trail.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid references activities(id) on delete set null
+- guest_id uuid references guests(id) on delete set null
+- employee_id uuid references employees(id) on delete set null
+- horse_id uuid references horses(id) on delete set null
+- trail_id uuid references trails(id) on delete set null
+- incident_type text
+- severity text
+- title text not null
+- description text
+- occurred_at timestamptz
+- reported_by uuid references profiles(id) on delete set null
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Examples:
+- Medical issue
+- Horse behavior
+- Guest behavior
+- Trail hazard
+- Equipment issue
+- Late return
+
+## Table: live_locations
+
+Purpose:
+Stores live GPS location updates from field staff during active activities.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid references activities(id) on delete cascade
+- employee_id uuid references employees(id) on delete set null
+- user_id uuid references profiles(id) on delete set null
+- latitude numeric not null
+- longitude numeric not null
+- accuracy_meters numeric
+- heading numeric
+- speed_mps numeric
+- recorded_at timestamptz not null default now()
+- created_at timestamptz default now()
+
+Notes:
+Used by the future Field App for live tracking.
+
+## Table: emergency_events
+
+Purpose:
+Stores emergency beacon events triggered from the Field App.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid references activities(id) on delete set null
+- employee_id uuid references employees(id) on delete set null
+- user_id uuid references profiles(id) on delete set null
+- status text not null default 'active'
+- latitude numeric
+- longitude numeric
+- message text
+- triggered_at timestamptz not null default now()
+- resolved_by uuid references profiles(id) on delete set null
+- resolved_at timestamptz
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Statuses:
+- active
+- acknowledged
+- resolved
+- false_alarm
+
+Notes:
+When active, this should put the Operations map into emergency mode.
+
 ## Future Tables
 
 - trail_files
