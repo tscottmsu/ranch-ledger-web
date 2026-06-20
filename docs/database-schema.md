@@ -179,6 +179,177 @@ Statuses:
 - completed
 - checked_out
 
+## Table: horses
+
+Purpose:
+Stores horses that can be assigned to guided rides.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- name text not null
+- barn_name text
+- status text not null default 'active'
+- max_rider_weight_lbs integer
+- temperament text
+- experience_level text
+- notes text
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Statuses:
+- active
+- inactive
+- retired
+- unavailable
+
+## Table: trails
+
+Purpose:
+Stores trails/routes used for guided rides and future mapped activities.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- name text not null
+- difficulty text
+- estimated_duration_minutes integer
+- description text
+- notes text
+- active boolean not null default true
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Notes:
+Trail file uploads and GPS geometry will be added later.
+
+## Table: activity_types
+
+Purpose:
+Defines the types of activities a ranch offers.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- name text not null
+- description text
+- active boolean not null default true
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Examples:
+- Guided Ride
+- Fishing Trip
+- Guided Hike
+- Wagon Ride
+
+Notes:
+Guided Ride is the first MVP activity type.
+
+## Table: activities
+
+Purpose:
+Stores scheduled ranch activities such as guided rides, fishing trips, hikes, and wagon rides.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_type_id uuid not null references activity_types(id) on delete restrict
+- trail_id uuid references trails(id) on delete set null
+- name text
+- activity_date date not null
+- start_time time
+- end_time time
+- status text not null default 'draft'
+- capacity integer
+- notes text
+- created_by uuid references profiles(id) on delete set null
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Statuses:
+- draft
+- preparing
+- ready
+- active
+- completed
+- cancelled
+
+Notes:
+Guided rides are activities. The assigned guests, employees, and horses are stored in assignment tables.
+
+## Table: activity_guest_assignments
+
+Purpose:
+Assigns guests to activities.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid not null references activities(id) on delete cascade
+- guest_id uuid not null references guests(id) on delete cascade
+- status text not null default 'assigned'
+- notes text
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Statuses:
+- assigned
+- present
+- no_show
+- completed
+- removed
+
+Constraints:
+- unique(activity_id, guest_id)
+
+## Table: activity_employee_assignments
+
+Purpose:
+Assigns employees to activities.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid not null references activities(id) on delete cascade
+- employee_id uuid not null references employees(id) on delete cascade
+- assignment_role text
+- status text not null default 'assigned'
+- notes text
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Examples:
+- lead_wrangler
+- assistant_wrangler
+- guide
+
+Constraints:
+- unique(activity_id, employee_id)
+
+## Table: activity_horse_assignments
+
+Purpose:
+Assigns horses to guests for a specific activity.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- activity_id uuid not null references activities(id) on delete cascade
+- guest_id uuid references guests(id) on delete set null
+- horse_id uuid not null references horses(id) on delete cascade
+- status text not null default 'assigned'
+- notes text
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Constraints:
+- unique(activity_id, horse_id)
+- unique(activity_id, guest_id)
+
+Notes:
+Horse assignments are activity-specific, not permanently tied to the guest.
+
 ## Future Tables
 
 - trail_files
