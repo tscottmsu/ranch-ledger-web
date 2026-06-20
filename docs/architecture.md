@@ -202,3 +202,146 @@ The workflow is:
 6. Head Wrangler confirms the ride group
 
 This separates guest intake from field operations.
+
+# Operations Board
+
+## Purpose
+
+The Operations Board is the primary workspace for the Head Wrangler.
+
+It is the first screen displayed after login for users with the Head Wrangler role.
+
+The purpose of the Operations Board is to answer one question:
+
+> **Have all guests been safely and appropriately assigned to today's activities?**
+
+The Operations Board is designed to support operational decision making rather than data entry.
+
+---
+
+## Primary User
+
+Head Wrangler
+
+Secondary users:
+
+* Administrator
+* Assistant Head Wrangler (future)
+
+---
+
+## Daily Workflow
+
+The Head Wrangler begins the day by opening the Operations Board.
+
+The workflow is:
+
+1. Review all guests currently checked in and available for activities.
+2. Identify guests who have not yet been assigned.
+3. Determine how many ride groups are needed based on guest count, available wranglers, available horses, and operational constraints.
+4. Build one or more ride groups.
+5. Assign a trail to each ride group.
+6. Assign a wrangler to each ride group.
+7. Assign horses to each guest.
+8. Review assignment warnings and blocking issues.
+9. Confirm ride groups.
+10. Monitor rides as they progress through the day.
+
+---
+
+## Operations Board Layout
+
+### Summary
+
+Display high-level operational information:
+
+* Guests currently checked in
+* Guests assigned
+* Guests waiting for assignment
+* Active ride groups
+* Completed ride groups
+* Conflicts requiring attention
+
+---
+
+### Guests Awaiting Assignment
+
+Display only guests who are:
+
+* Currently checked in
+* Eligible for activities
+* Not yet assigned to an activity for the selected time period
+
+Each guest card should display:
+
+* Name
+* Riding experience
+* Current stay dates
+* Trails completed during current stay
+* Assigned horse history
+* Medical alerts (if applicable)
+
+---
+
+### Ride Groups
+
+Each Ride Group should display:
+
+* Group name
+* Activity type
+* Assigned trail
+* Assigned wrangler
+* Assigned guests
+* Assigned horses
+* Ride status
+* Warning count
+* Block count
+
+Statuses:
+
+* Draft
+* Preparing
+* Ready
+* Active
+* Completed
+* Cancelled
+
+---
+
+### Warnings and Conflicts
+
+The Operations Board should continuously surface operational issues.
+
+Examples:
+
+Warnings:
+
+* Guest has already ridden this trail during current stay.
+* Guest experience may not match trail difficulty.
+* Horse has already completed multiple rides today.
+* Wrangler workload is unusually high.
+
+Blocking Issues:
+
+* Horse already assigned.
+* Wrangler already assigned.
+* Guest already assigned.
+* Guest not currently checked in.
+* Horse exceeds rider weight limit.
+* Ride exceeds maximum capacity.
+
+Blocking issues must be resolved before a Ride Group can be confirmed.
+
+---
+
+## Design Philosophy
+
+The Operations Board should function as a real-time operational dashboard.
+
+Its purpose is not to help users create data.
+
+Its purpose is to help the Head Wrangler make informed operational decisions quickly and safely.
+
+The software should provide recommendations, warnings, and visibility while allowing the Head Wrangler to make the final decisions.
+
+The Head Wrangler should be able to understand the operational state of the ranch within a few seconds of opening the screen.
