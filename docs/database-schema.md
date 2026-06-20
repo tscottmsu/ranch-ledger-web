@@ -101,6 +101,84 @@ Constraints:
 Notes:
 Software roles live here, not on employees.
 
+## Table: employees
+
+Purpose:
+Stores ranch staff records. Employees may or may not have login access.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- first_name text not null
+- last_name text not null
+- nickname text
+- phone text
+- email text
+- position text
+- employment_status text not null default 'active'
+- hire_date date
+- notes text
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Notes:
+Employee position is not the same as software role.
+
+## Table: reservations
+
+Purpose:
+Groups guests together under a reservation, party, family, or group.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- reservation_name text
+- primary_contact_name text
+- primary_contact_phone text
+- primary_contact_email text
+- arrival_date date
+- departure_date date
+- cabin_or_lodging_notes text
+- group_notes text
+- status text not null default 'reserved'
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+## Table: guests
+
+Purpose:
+Stores individual guests. Guests are records first and do not require login access.
+
+Columns:
+- id uuid primary key default gen_random_uuid()
+- ranch_id uuid not null references ranches(id) on delete cascade
+- reservation_id uuid references reservations(id) on delete set null
+- first_name text not null
+- last_name text not null
+- nickname text
+- age integer
+- phone text
+- emergency_contact_name text
+- emergency_contact_phone text
+- arrival_date date
+- departure_date date
+- riding_experience text
+- weight_lbs integer
+- medical_notes text
+- special_notes text
+- status text not null default 'reserved'
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Statuses:
+- reserved
+- checked_in
+- ready_for_assignment
+- assigned
+- in_activity
+- completed
+- checked_out
+
 ## Future Tables
 
 - trail_files
