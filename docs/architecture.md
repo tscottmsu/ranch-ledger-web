@@ -472,3 +472,5 @@ Ranch Ledger should follow these principles as the platform grows:
 9. The Head Wrangler should be able to understand the day’s operational state within a few seconds.
 
 10. The Field App should prioritize safety, speed, and simplicity over feature depth.
+
+11. Employee positions represent real-world responsibilities. Software roles represent permissions. The two should remain independent.
