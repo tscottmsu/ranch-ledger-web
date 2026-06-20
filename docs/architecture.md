@@ -345,3 +345,130 @@ Its purpose is to help the Head Wrangler make informed operational decisions qui
 The software should provide recommendations, warnings, and visibility while allowing the Head Wrangler to make the final decisions.
 
 The Head Wrangler should be able to understand the operational state of the ranch within a few seconds of opening the screen.
+
+
+# Ranch Setup Workflow
+
+## Purpose
+
+Before a ranch can begin daily operations, it must be configured by an Administrator.
+
+The Administrator is responsible for creating the operational environment that the Head Wrangler and other staff will use.
+
+The setup process is expected to happen once during initial deployment, with updates made over time as ranch operations change.
+
+---
+
+## Initial Ranch Setup
+
+Administrator creates:
+
+### Ranch Profile
+
+* Ranch Name
+* Address
+* City
+* State
+* Country
+* Phone Number
+* Email Address
+* Website
+* Time Zone
+* Logo
+* Emergency Contact Information
+
+---
+
+### Employees
+
+Administrator creates employee records.
+
+Examples:
+
+* Head Wrangler
+* Wrangler
+* Assistant Wrangler
+* Guide
+* Ranch Manager
+
+Employee records exist independently of user accounts.
+
+---
+
+### User Accounts
+
+Only employees who require access to Ranch Ledger receive login accounts.
+
+Examples:
+
+* Administrator
+* Head Wrangler
+
+Some employees, such as seasonal wranglers, may not require login access.
+
+User accounts are linked to employee records when applicable.
+
+---
+
+### Horses
+
+Administrator creates horse records.
+
+Example information:
+
+* Name
+* Barn Name
+* Status
+* Maximum Rider Weight
+* Temperament
+* Experience Level
+* Notes
+
+---
+
+### Trails
+
+Administrator creates trail records.
+
+Example information:
+
+* Trail Name
+* Difficulty
+* Estimated Duration
+* Description
+* Active Status
+* GPS Route (future)
+
+---
+
+## Transition to Operations
+
+Once setup is complete, responsibility shifts to the Head Wrangler.
+
+The Head Wrangler uses the configured ranch data to manage daily operations but generally does not create foundational records such as ranch information, employee records, horses, or trails.
+
+This separation ensures operational staff focus on running the ranch rather than configuring it.
+
+## Product Principles
+
+Ranch Ledger should follow these principles as the platform grows:
+
+1. The software recommends; people decide.
+
+2. Warnings inform; blocks protect.
+
+3. Every screen should answer a specific operational question.
+
+4. Configuration is separate from operations.
+
+5. Field users should accomplish common tasks in three taps or fewer.
+
+6. Guests are records first, login users later only if needed.
+
+7. Ranch data belongs to the ranch and should always be scoped by ranch.
+
+8. The platform should be modular so new activity types can be added without redesigning the system.
+
+9. The Head Wrangler should be able to understand the day’s operational state within a few seconds.
+
+10. The Field App should prioritize safety, speed, and simplicity over feature depth.
