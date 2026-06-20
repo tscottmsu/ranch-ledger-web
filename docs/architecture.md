@@ -135,3 +135,21 @@ Safety tables:
 - trail_files
 - live_locations
 - emergency_events
+
+## Employees vs Users
+
+Employees are ranch staff records.
+
+Not every employee needs to log in.
+
+Users are people with Supabase authentication accounts.
+
+Some employees may be linked to users, but this is optional.
+
+Examples:
+
+- A wrangler may be listed as an employee and assigned to rides without having login access.
+- A head wrangler should usually be both an employee and a user.
+- An administrator should be a user and may or may not also be an employee.
+
+This keeps scheduling separate from system access.
