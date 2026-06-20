@@ -153,3 +153,52 @@ Examples:
 - An administrator should be a user and may or may not also be an employee.
 
 This keeps scheduling separate from system access.
+
+## Head Wrangler Daily Guided Ride Workflow
+
+The Head Wrangler begins the day by reviewing the guests currently on property.
+
+For each guided ride, the Head Wrangler is expected to:
+
+1. Review guests available for the day
+2. Review each guest's ride history for the current stay
+3. Review each guest's riding experience level
+4. Assign guests to an appropriate route
+5. Avoid assigning a guest to a route they have already completed during the current stay
+6. Assign a horse to each guest for that ride
+7. Assign a wrangler to lead the ride
+8. Review warnings and blocking issues
+9. Confirm the ride
+10. Track the ride as preparing, active, completed, or cancelled
+
+Horse assignments are ride-specific.
+
+A horse may stay with a guest for the entire stay, but the system should not require this. The system should track horse history by guest so the Head Wrangler can see previous successful pairings.
+
+The main goal of the guided ride workflow is to help the Head Wrangler safely and efficiently answer:
+
+- Who is riding today?
+- Which route should they ride?
+- Have they already ridden this route?
+- Is this route appropriate for their experience?
+- Which horse should they ride?
+- Who is leading the ride?
+
+## Guest Intake vs Ride Assignment
+
+Guest creation is an administrative workflow.
+
+Administrators are responsible for creating and managing guest records, including stay dates, contact information, notes, and any relevant rider information.
+
+Head Wranglers do not primarily create guests. They see the guests who are currently checked in or scheduled for the day and use that list to build ride groups.
+
+The workflow is:
+
+1. Administrator creates guest records
+2. Administrator enters stay dates and guest details
+3. Head Wrangler views today's available guests
+4. Head Wrangler creates ride groups
+5. Head Wrangler assigns route, horse, and wrangler
+6. Head Wrangler confirms the ride group
+
+This separates guest intake from field operations.
