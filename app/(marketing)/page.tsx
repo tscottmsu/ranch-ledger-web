@@ -23,9 +23,9 @@ export default function HomePage() {
           </Button>
         </div>
       </section>
-      <aside className="rounded-3xl border bg-card/90 p-6 shadow-xl shadow-primary/5 backdrop-blur sm:p-8">
-        <div className="rounded-2xl bg-primary p-6 text-primary-foreground">
-          <p className="text-sm font-medium opacity-75">Ranch administration</p>
+      <aside className="rounded-3xl border bg-card/90 p-6 shadow-xl shadow-primary/10 backdrop-blur sm:p-8">
+        <div className="rounded-2xl bg-sidebar p-6 text-sidebar-foreground">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Ranch administration</p>
           <p className="mt-2 text-2xl font-semibold">A sound foundation first.</p>
         </div>
         <div className="mt-5 grid gap-3">

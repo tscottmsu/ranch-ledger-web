@@ -6,6 +6,13 @@ export type DashboardContext = {
   user: User;
   ranch: Ranch | null;
   setupProgress: SetupProgress | null;
+  guestSummary: GuestSummary | null;
+};
+
+export type GuestSummary = {
+  guests: number;
+  reservations: number;
+  checkedIn: number;
 };
 
 export type SetupProgress = {
