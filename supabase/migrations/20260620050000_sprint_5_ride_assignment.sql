@@ -331,8 +331,8 @@ alter table public.ride_validation_warnings enable row level security;
 
 grant select, insert, update on public.rides to authenticated;
 grant select, insert, update on public.ride_guests to authenticated;
-grant select, insert, update on public.ride_horse_assignments to authenticated;
-grant select, insert, update on public.ride_wrangler_assignments to authenticated;
+grant select, insert, update, delete on public.ride_horse_assignments to authenticated;
+grant select, insert, update, delete on public.ride_wrangler_assignments to authenticated;
 grant select, insert, update on public.ride_validation_warnings to authenticated;
 
 create policy "Members can read rides" on public.rides for select to authenticated
@@ -358,6 +358,8 @@ with check (public.can_manage_daily_operations(ranch_id));
 create policy "Operations managers can update ride horse assignments" on public.ride_horse_assignments for update to authenticated
 using (public.can_manage_daily_operations(ranch_id))
 with check (public.can_manage_daily_operations(ranch_id));
+create policy "Operations managers can delete ride horse assignments" on public.ride_horse_assignments for delete to authenticated
+using (public.can_manage_daily_operations(ranch_id));
 
 create policy "Members can read ride wrangler assignments" on public.ride_wrangler_assignments for select to authenticated
 using (public.is_active_ranch_member(ranch_id));
@@ -366,6 +368,8 @@ with check (public.can_manage_daily_operations(ranch_id));
 create policy "Operations managers can update ride wrangler assignments" on public.ride_wrangler_assignments for update to authenticated
 using (public.can_manage_daily_operations(ranch_id))
 with check (public.can_manage_daily_operations(ranch_id));
+create policy "Operations managers can delete ride wrangler assignments" on public.ride_wrangler_assignments for delete to authenticated
+using (public.can_manage_daily_operations(ranch_id));
 
 create policy "Members can read ride validation warnings" on public.ride_validation_warnings for select to authenticated
 using (public.is_active_ranch_member(ranch_id));

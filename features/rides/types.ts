@@ -71,11 +71,39 @@ export type RideValidationWarning = {
   updated_at: string;
 };
 
+export type RideOption = { id: string; name: string };
+export type RideTrailOption = RideOption & { difficulty: string | null; estimated_duration_minutes: number | null };
+export type EligibleRideGuest = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  reservation_id: string | null;
+  riding_experience: string | null;
+  weight_lbs: number | null;
+  status: string;
+  assigned_ride_id: string | null;
+  assigned_ride_name: string | null;
+};
+export type AvailableHorse = { id: string; name: string; status: string; temperament: string | null; experience_level: string | null; assigned_ride_id: string | null; assigned_ride_name: string | null };
+export type AvailableWrangler = { id: string; first_name: string; last_name: string; position: string | null; assigned_ride_id: string | null; assigned_ride_name: string | null };
+
 export type RideWithAssignments = Ride & {
   activity_type: { name: string } | null;
-  trail: { name: string; difficulty: string | null } | null;
-  guests: Array<RideGuest & { guest: { first_name: string; last_name: string; riding_experience: string | null } | null }>;
-  horse_assignments: Array<RideHorseAssignment & { horse: { name: string; status: string } | null }>;
-  wrangler_assignments: Array<RideWranglerAssignment & { employee: { first_name: string; last_name: string } | null }>;
+  trail: { name: string; difficulty: string | null; estimated_duration_minutes?: number | null } | null;
+  guests: Array<RideGuest & { guest: { first_name: string; last_name: string; riding_experience: string | null; weight_lbs: number | null } | null }>;
+  horse_assignments: Array<RideHorseAssignment & { horse: { name: string; status: string; temperament: string | null } | null }>;
+  wrangler_assignments: Array<RideWranglerAssignment & { employee: { first_name: string; last_name: string; position: string | null } | null }>;
   validation_warnings: RideValidationWarning[];
+};
+
+export type RideOperationsSnapshot = {
+  date: string;
+  timezone: string;
+  rides: RideWithAssignments[];
+  eligibleGuests: EligibleRideGuest[];
+  activityTypes: RideOption[];
+  trails: RideTrailOption[];
+  availableHorses: AvailableHorse[];
+  availableWranglers: AvailableWrangler[];
+  counts: { total: number; draft: number; assigning: number; ready: number; active: number; completed: number; cancelled: number };
 };
