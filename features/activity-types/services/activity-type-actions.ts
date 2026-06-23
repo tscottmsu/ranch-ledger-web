@@ -1,0 +1,9 @@
+"use server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { archiveActivityType, createActivityType, updateActivityType, type ActivityTypeInput } from "./activity-type-service";
+import type { ActivityTypeFormState } from "../types";
+function parse(formData: FormData): { input?: ActivityTypeInput; state?: ActivityTypeFormState } { const name = String(formData.get("name") ?? "").trim(); const description = String(formData.get("description") ?? "").trim(); if (!name) return { state: { status: "error", fieldErrors: { name: "Activity type name is required." } } }; return { input: { name, description: description || null, active: String(formData.get("active") ?? "true") !== "false" } }; }
+export async function createActivityTypeAction(_state: ActivityTypeFormState, formData: FormData): Promise<ActivityTypeFormState> { const parsed = parse(formData); if (parsed.state) return parsed.state; const { error } = await createActivityType(parsed.input!); if (error) return { status: "error", message: error.code === "23505" ? "An activity type with this name already exists." : error.message }; revalidatePath("/dashboard"); redirect("/dashboard/activity-types"); }
+export async function updateActivityTypeAction(id: string, _state: ActivityTypeFormState, formData: FormData): Promise<ActivityTypeFormState> { const parsed = parse(formData); if (parsed.state) return parsed.state; const { error } = await updateActivityType(id, parsed.input!); if (error) return { status: "error", message: error.code === "23505" ? "An activity type with this name already exists." : error.message }; revalidatePath("/dashboard"); redirect("/dashboard/activity-types"); }
+export async function archiveActivityTypeAction(id: string) { const { error } = await archiveActivityType(id); if (error) throw new Error("Unable to archive activity type."); revalidatePath("/dashboard/activity-types"); revalidatePath("/dashboard"); }

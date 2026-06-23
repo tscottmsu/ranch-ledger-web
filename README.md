@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ranch Ledger
 
-## Getting Started
+Ranch Ledger is a ranch-scoped operations platform. The current foundation provides secure authentication, ranch onboarding, and administrator setup for employees, horses, trails, and activity types.
 
-First, run the development server:
+## Local setup
+
+1. Create a Supabase project.
+2. Copy `.env.example` to `.env.local` and add the project URL and publishable key from **Project Settings → API**.
+3. Apply the migrations in order with the Supabase CLI or SQL Editor:
+   - `supabase/migrations/20260620000000_sprint_1_foundation.sql`
+   - `supabase/migrations/20260620010000_sprint_2_ranch_setup.sql`
+   - `supabase/migrations/20260620020000_sprint_3_guests_reservations.sql`
+   - `supabase/migrations/20260620030000_sprint_3_reservation_workflow_fixes.sql`
+   - `supabase/migrations/20260620040000_sprint_4_activities.sql`
+4. In **Authentication → URL Configuration**, set the local Site URL to `http://localhost:3000` and add `http://localhost:3000/auth/callback` as an allowed redirect URL. Add the equivalent production callback before deployment.
+5. Install dependencies and start the app:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verification
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+## Authentication notes
 
-To learn more about Next.js, take a look at the following resources:
+Email/password authentication must be enabled in Supabase. When email confirmation is enabled, new administrators receive Supabase's confirmation email and return through `/auth/callback` before completing ranch setup.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The root `proxy.ts` refreshes SSR auth cookies. Protected dashboard routes also verify the user in their server layout; proxy checks are not treated as the sole authorization boundary. Database access is protected with Row Level Security.

@@ -1,0 +1,6 @@
+export type GuestStatus = "reserved" | "checked_in" | "ready_for_assignment" | "assigned" | "in_activity" | "completed" | "checked_out" | "archived";
+export type Guest = { id: string; ranch_id: string; reservation_id: string | null; first_name: string; last_name: string; nickname: string | null; age: number | null; phone: string | null; emergency_contact_name: string | null; emergency_contact_phone: string | null; arrival_date: string | null; departure_date: string | null; riding_experience: string | null; height_inches: number | null; weight_lbs: number | null; medical_notes: string | null; special_notes: string | null; status: GuestStatus; created_at: string; updated_at: string };
+export type GuestWithReservation = Guest & { reservation: { reservation_name: string | null; primary_contact_name: string | null } | null };
+export type GuestWithPrep = GuestWithReservation & { riding_assignment: { horse_id: string | null; saddle_id: string | null; horse: { name: string } | null; saddle: { name: string } | null } | null };
+export type GuestFormState = { status: "idle" | "error"; message?: string; fieldErrors?: Partial<Record<"firstName" | "lastName" | "age" | "height" | "weight" | "dates", string>> };
+export const initialGuestFormState: GuestFormState = { status: "idle" };
