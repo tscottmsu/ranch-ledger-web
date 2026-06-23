@@ -50,7 +50,8 @@ function revalidateRides(rideId?: string) {
 
 export async function createRideAction(formData: FormData) {
   const input = parseRide(formData);
-  if (!input.activity_type_id || !input.ride_date) throw new Error("Ride type and date are required.");
+  if (!input.activity_type_id) throw new Error("Create an active horseback ride setup item before building rides.");
+  if (!input.ride_date) throw new Error("Ride date is required.");
   const { data, error } = await createRide(input);
   if (error) throw new Error(error.message);
   await regenerateValidationWarnings(data.id);
