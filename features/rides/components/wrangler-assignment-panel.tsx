@@ -6,7 +6,7 @@ import type { AvailableWrangler, RideWithAssignments } from "../types";
 
 export function WranglerAssignmentPanel({ ride, wranglers }: { ride: RideWithAssignments; wranglers: AvailableWrangler[] }) {
   return <section className="rounded-lg border bg-white p-5 shadow-sm">
-    <div className="flex items-center gap-2"><Shield className="size-5 text-orange-700" /><h2 className="text-lg font-semibold">4. Assign wranglers</h2></div>
+    <div className="flex items-center gap-2"><Shield className="size-5 text-orange-700" /><h2 className="text-lg font-semibold">1. Assign wranglers</h2></div>
     <p className="mt-1 text-sm text-stone-500">Pick a lead and add assistants as the ride size demands.</p>
     <form action={assignWranglerAction.bind(null, ride.id)} className="mt-4 grid gap-3 sm:grid-cols-[1fr_10rem_auto]">
       <select name="wrangler" className="h-10 rounded-lg border bg-white px-3 text-sm">

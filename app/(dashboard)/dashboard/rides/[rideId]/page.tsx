@@ -10,5 +10,5 @@ export default async function RideBuilderPage({ params }: { params: Promise<{ ri
   const { rideId } = await params;
   const data = await getRideBuilderData(rideId);
   if (!data) notFound();
-  return <RideBuilder ride={data.ride} trails={data.trails} eligibleGuests={data.eligibleGuests} availableHorses={data.availableHorses} availableWranglers={data.availableWranglers} />;
+  return <RideBuilder ride={data.ride} trails={data.trails} eligibleGuests={data.eligibleGuests} availableHorses={data.availableHorses} availableWranglers={data.availableWranglers} saddles={data.saddles} />;
 }

@@ -11,6 +11,8 @@ import {
   findRideOptions,
   findRideRecord,
   findRidesForDate,
+  findReservationGuestAssignment,
+  findSaddles,
   insertRide,
   insertRideGuest,
   removeHorseAssignmentRecord,
@@ -64,12 +66,13 @@ export async function getTodaysRideOperations() {
   const context = await requireRideOperationsManager();
   const date = currentDateInTimezone(context.timezone);
   await ensureHorsebackRideSetupForRanch(context.ranchId);
-  const [rides, options, eligibleGuests, availableHorses, availableWranglers] = await Promise.all([
+  const [rides, options, eligibleGuests, availableHorses, availableWranglers, saddles] = await Promise.all([
     findRidesForDate(context.ranchId, date),
     findRideOptions(context.ranchId),
     findEligibleGuestsForDate(context.ranchId, date),
     findAvailableHorsesForDate(context.ranchId, date),
     findAvailableWranglersForDate(context.ranchId, date),
+    findSaddles(context.ranchId),
   ]);
   return {
     date,
@@ -78,6 +81,7 @@ export async function getTodaysRideOperations() {
     eligibleGuests,
     availableHorses,
     availableWranglers,
+    saddles,
     activityTypes: options.activityTypes,
     trails: options.trails,
     counts: {
@@ -96,13 +100,14 @@ export async function getRideBuilderData(rideId: string) {
   const context = await requireRideOperationsManager();
   const ride = await findRideById(context.ranchId, rideId);
   if (!ride) return null;
-  const [options, eligibleGuests, availableHorses, availableWranglers] = await Promise.all([
+  const [options, eligibleGuests, availableHorses, availableWranglers, saddles] = await Promise.all([
     findRideOptions(context.ranchId),
     findEligibleGuestsForDate(context.ranchId, ride.ride_date),
     findAvailableHorsesForDate(context.ranchId, ride.ride_date),
     findAvailableWranglersForDate(context.ranchId, ride.ride_date),
+    findSaddles(context.ranchId),
   ]);
-  return { ride, activityTypes: options.activityTypes, trails: options.trails, eligibleGuests, availableHorses, availableWranglers };
+  return { ride, activityTypes: options.activityTypes, trails: options.trails, eligibleGuests, availableHorses, availableWranglers, saddles };
 }
 
 export async function createRide(input: RideInput) {
@@ -143,6 +148,10 @@ export async function addGuestToRide(rideId: string, guestId: string) {
   const guest = eligibleGuests.find((item) => item.id === guestId);
   if (!guest) return { error: new Error("Guest is not eligible for this ride date.") };
   const result = await insertRideGuest(ranchId, rideId, guestId, guest.reservation_id);
+  if (!result.error && result.data?.id && guest.reservation_id) {
+    const prep = await findReservationGuestAssignment(ranchId, guest.reservation_id, guestId);
+    if (prep?.horse_id) await upsertHorseAssignment(ranchId, rideId, result.data.id, prep.horse_id, prep.saddle_id);
+  }
   await regenerateValidationWarnings(rideId);
   return result;
 }
@@ -153,9 +162,9 @@ export async function removeGuestFromRide(rideGuestId: string) {
   return result;
 }
 
-export async function assignHorseToGuest(rideId: string, rideGuestId: string, horseId: string) {
+export async function assignHorseToGuest(rideId: string, rideGuestId: string, horseId: string, saddleId?: string | null) {
   const { ranchId } = await requireRideOperationsManager();
-  const result = await upsertHorseAssignment(ranchId, rideId, rideGuestId, horseId);
+  const result = await upsertHorseAssignment(ranchId, rideId, rideGuestId, horseId, saddleId);
   await regenerateValidationWarnings(rideId);
   return result;
 }

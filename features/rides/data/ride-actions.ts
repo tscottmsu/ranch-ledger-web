@@ -86,6 +86,16 @@ export async function addGuestToRideAction(rideId: string, formData: FormData) {
   revalidateRides(rideId);
 }
 
+export async function addGuestsToRideAction(rideId: string, formData: FormData) {
+  const guestIds = formData.getAll("guests").map((item) => String(item)).filter(Boolean);
+  if (!guestIds.length) throw new Error("Choose guests for the ride roster.");
+  for (const guestId of guestIds) {
+    const { error } = await addGuestToRide(rideId, guestId);
+    if (error) throw new Error(error.message);
+  }
+  revalidateRides(rideId);
+}
+
 export async function removeGuestFromRideAction(rideId: string, rideGuestId: string) {
   const { error } = await removeGuestFromRide(rideGuestId);
   if (error) throw new Error(error.message);
@@ -95,8 +105,9 @@ export async function removeGuestFromRideAction(rideId: string, rideGuestId: str
 
 export async function assignHorseAction(rideId: string, rideGuestId: string, formData: FormData) {
   const horseId = value(formData, "horse");
+  const saddleId = value(formData, "saddle") || null;
   if (!horseId) throw new Error("Choose a horse.");
-  const { error } = await assignHorseToGuest(rideId, rideGuestId, horseId);
+  const { error } = await assignHorseToGuest(rideId, rideGuestId, horseId, saddleId);
   if (error) throw new Error(error.message);
   revalidateRides(rideId);
 }

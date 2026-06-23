@@ -1,6 +1,6 @@
 import "server-only";
 
-import { requireRanchAdministrator } from "@/features/ranch/services/ranch-context-service";
+import { getCurrentRanchContext, requireRanchAdministrator } from "@/features/ranch/services/ranch-context-service";
 import { createClient } from "@/lib/supabase/server";
 import type { Reservation, ReservationOption, ReservationStatus } from "../types";
 
@@ -8,7 +8,7 @@ export type ReservationInput = { reservation_name: string | null; primary_contac
 export type NewReservationGuest = { first_name: string; last_name: string };
 
 export async function listReservations(): Promise<Reservation[]> { const { ranchId } = await requireRanchAdministrator(); const supabase = await createClient(); const { data, error } = await supabase.from("reservations").select("*").eq("ranch_id", ranchId).order("arrival_date", { ascending: false, nullsFirst: false }); if (error) throw error; return data as Reservation[]; }
-export async function listReservationOptions(): Promise<ReservationOption[]> { const { ranchId } = await requireRanchAdministrator(); const supabase = await createClient(); const { data, error } = await supabase.from("reservations").select("id,reservation_name,primary_contact_name,status").eq("ranch_id", ranchId).order("reservation_name"); if (error) throw error; return data as ReservationOption[]; }
+export async function listReservationOptions(): Promise<ReservationOption[]> { const context = await getCurrentRanchContext(); if (!context || !["ranch_administrator", "head_wrangler"].includes(context.role)) throw new Error("Guest prep access is required."); const supabase = await createClient(); const { data, error } = await supabase.from("reservations").select("id,reservation_name,primary_contact_name,status").eq("ranch_id", context.ranchId).order("reservation_name"); if (error) throw error; return data as ReservationOption[]; }
 export async function getReservation(id: string): Promise<Reservation | null> { const { ranchId } = await requireRanchAdministrator(); const supabase = await createClient(); const { data, error } = await supabase.from("reservations").select("*").eq("ranch_id", ranchId).eq("id", id).maybeSingle(); if (error) throw error; return data as Reservation | null; }
 
 export async function saveReservationWithGuests(id: string | null, input: ReservationInput, guests: NewReservationGuest[]) {

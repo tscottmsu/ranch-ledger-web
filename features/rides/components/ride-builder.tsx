@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { regenerateRideWarningsAction, updateRideStatusAction } from "../data/ride-actions";
-import type { AvailableHorse, AvailableWrangler, EligibleRideGuest, RideTrailOption, RideWithAssignments } from "../types";
+import type { AvailableHorse, AvailableWrangler, EligibleRideGuest, RideTrailOption, RideWithAssignments, Saddle } from "../types";
 import { EligibleGuestList } from "./eligible-guest-list";
 import { HorseAssignmentPanel } from "./horse-assignment-panel";
 import { RideStatusBadge } from "./ride-status-badge";
@@ -13,7 +13,7 @@ import { WranglerAssignmentPanel } from "./wrangler-assignment-panel";
 
 const formatTime = (time: string | null) => time ? new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: "UTC" }).format(new Date(`2000-01-01T${time}Z`)) : "Time not set";
 
-export function RideBuilder({ ride, trails, eligibleGuests, availableHorses, availableWranglers }: { ride: RideWithAssignments; trails: RideTrailOption[]; eligibleGuests: EligibleRideGuest[]; availableHorses: AvailableHorse[]; availableWranglers: AvailableWrangler[] }) {
+export function RideBuilder({ ride, trails, eligibleGuests, availableHorses, availableWranglers, saddles }: { ride: RideWithAssignments; trails: RideTrailOption[]; eligibleGuests: EligibleRideGuest[]; availableHorses: AvailableHorse[]; availableWranglers: AvailableWrangler[]; saddles: Saddle[] }) {
   const blockingWarnings = ride.validation_warnings.filter((warning) => warning.severity === "blocking");
   const canMarkReady = !blockingWarnings.length;
   const statusActions = [
@@ -42,10 +42,10 @@ export function RideBuilder({ ride, trails, eligibleGuests, availableHorses, ava
     {blockingWarnings.length ? <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-900">Resolve blocking warnings before marking this ride ready.</p> : null}
     <div className="grid gap-6 xl:grid-cols-[1fr_22rem]">
       <div className="space-y-5">
+        <WranglerAssignmentPanel ride={ride} wranglers={availableWranglers} />
         <TrailAssignmentPanel ride={ride} trails={trails} />
         <EligibleGuestList ride={ride} guests={eligibleGuests} />
-        <HorseAssignmentPanel ride={ride} horses={availableHorses} />
-        <WranglerAssignmentPanel ride={ride} wranglers={availableWranglers} />
+        <HorseAssignmentPanel ride={ride} horses={availableHorses} saddles={saddles} />
       </div>
       <aside className="h-fit rounded-lg border bg-white p-5 shadow-sm">
         <h2 className="text-lg font-semibold">Ride readiness</h2>

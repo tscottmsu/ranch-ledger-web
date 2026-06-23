@@ -1,20 +1,30 @@
-import { UserPlus, X } from "lucide-react";
+"use client";
+
+import { useMemo, useState } from "react";
+import { Search, UserPlus, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { addGuestToRideAction, removeGuestFromRideAction } from "../data/ride-actions";
+import { addGuestsToRideAction, removeGuestFromRideAction } from "../data/ride-actions";
 import type { EligibleRideGuest, RideWithAssignments } from "../types";
 
 export function EligibleGuestList({ ride, guests }: { ride: RideWithAssignments; guests: EligibleRideGuest[] }) {
-  const assignedGuestIds = new Set(ride.guests.map((item) => item.guest_id));
-  const choices = guests.filter((guest) => !assignedGuestIds.has(guest.id) || guest.assigned_ride_id === ride.id);
+  const [query, setQuery] = useState("");
+  const assignedGuestIds = useMemo(() => new Set(ride.guests.map((item) => item.guest_id)), [ride.guests]);
+  const choices = useMemo(() => guests.filter((guest) => !assignedGuestIds.has(guest.id) || guest.assigned_ride_id === ride.id).filter((guest) => `${guest.first_name} ${guest.last_name}`.toLowerCase().includes(query.toLowerCase())), [assignedGuestIds, guests, query, ride.id]);
   return <section className="rounded-lg border bg-white p-5 shadow-sm">
-    <div className="flex items-center gap-2"><UserPlus className="size-5 text-orange-700" /><h2 className="text-lg font-semibold">2. Add guests</h2></div>
-    <p className="mt-1 text-sm text-stone-500">Assign guests before the horses are saddled.</p>
-    <form action={addGuestToRideAction.bind(null, ride.id)} className="mt-4 flex flex-col gap-3 sm:flex-row">
-      <select name="guest" className="h-10 flex-1 rounded-lg border bg-white px-3 text-sm">
-        <option value="">Choose an arriving or checked-in guest</option>
-        {choices.map((guest) => <option key={guest.id} value={guest.id} disabled={Boolean(guest.assigned_ride_id && guest.assigned_ride_id !== ride.id)}>{guest.first_name} {guest.last_name}{guest.assigned_ride_name && guest.assigned_ride_id !== ride.id ? ` - on ${guest.assigned_ride_name}` : ""}</option>)}
-      </select>
+    <div className="flex items-center gap-2"><UserPlus className="size-5 text-orange-700" /><h2 className="text-lg font-semibold">3. Build the ride roster</h2></div>
+    <p className="mt-1 text-sm text-stone-500">Use assigned horses from guest prep, then review tack before the ride leaves the yard.</p>
+    <form action={addGuestsToRideAction.bind(null, ride.id)} className="mt-4 space-y-3">
+      <label className="flex h-10 items-center gap-2 rounded-lg border bg-white px-3 text-sm text-stone-500"><Search className="size-4" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search guests" className="h-full flex-1 bg-transparent text-stone-900 outline-none" /></label>
+      <div className="max-h-72 space-y-2 overflow-auto rounded-lg border bg-stone-50 p-2">
+        {choices.length ? choices.map((guest) => {
+          const disabled = Boolean(guest.assigned_ride_id && guest.assigned_ride_id !== ride.id);
+          return <label key={guest.id} className={`flex items-start gap-3 rounded-lg bg-white p-3 text-sm shadow-sm ${disabled ? "opacity-50" : ""}`}>
+            <input type="checkbox" name="guests" value={guest.id} disabled={disabled || assignedGuestIds.has(guest.id)} className="mt-1 size-4" />
+            <span><span className="font-medium">{guest.first_name} {guest.last_name}</span><span className="mt-1 block text-xs text-stone-500">{guest.default_horse_name ? `${guest.default_horse_name}${guest.default_saddle_name ? ` / ${guest.default_saddle_name}` : ""}` : "This guest needs a horse assignment"}{guest.assigned_ride_name && guest.assigned_ride_id !== ride.id ? ` - on ${guest.assigned_ride_name}` : ""}</span></span>
+          </label>;
+        }) : <p className="p-3 text-sm text-stone-500">No guests match the roster search.</p>}
+      </div>
       <Button type="submit" className="bg-orange-700 text-white hover:bg-orange-800">Add guest</Button>
     </form>
     <div className="mt-4 divide-y rounded-lg border">
