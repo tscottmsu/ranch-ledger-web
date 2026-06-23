@@ -1,13 +1,18 @@
 import { Button } from "@/components/ui/button";
+import type { Guest } from "@/features/guests/types";
 import { saveGuestRidingAssignmentAction } from "../services/riding-assignment-actions";
 import type { Horse } from "@/features/horses/types";
-import type { ReservationGuestAssignment, Saddle } from "@/features/rides/types";
+import type { ReservationGuestAssignment } from "@/features/rides/types";
+import type { Saddle } from "@/features/saddles/types";
+import { getSaddleRecommendations } from "@/features/saddles/data/saddle-recommendation-service";
 
-export function RidingAssignmentPanel({ guestId, reservationId, assignment, horses, saddles }: { guestId: string; reservationId: string | null; assignment: ReservationGuestAssignment | null; horses: Horse[]; saddles: Saddle[] }) {
+export function RidingAssignmentPanel({ guest, assignment, horses, saddles }: { guest: Guest; assignment: ReservationGuestAssignment | null; horses: Horse[]; saddles: Saddle[] }) {
+  const { message, recommendations } = getSaddleRecommendations(guest, saddles);
+  const recommendedIds = new Set(recommendations.map((item) => item.saddle.id));
   return <section className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
     <h2 className="text-lg font-semibold">Riding assignment</h2>
     <p className="mt-1 text-sm text-stone-500">Set the guest&apos;s usual horse, saddle, and riding notes before morning rides.</p>
-    {!reservationId ? <p className="mt-4 rounded-lg bg-orange-50 p-3 text-sm text-orange-900">Add this guest to a reservation before setting ride prep.</p> : <form action={saveGuestRidingAssignmentAction.bind(null, guestId, reservationId)} className="mt-4 grid gap-4">
+    {!guest.reservation_id ? <p className="mt-4 rounded-lg bg-orange-50 p-3 text-sm text-orange-900">Add this guest to a reservation before setting ride prep.</p> : <form action={saveGuestRidingAssignmentAction.bind(null, guest.id, guest.reservation_id)} className="mt-4 grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-1 text-sm font-medium text-stone-700">Horse
           <select name="horse" defaultValue={assignment?.horse_id ?? ""} className="h-10 rounded-lg border bg-white px-3 text-sm">
@@ -18,8 +23,10 @@ export function RidingAssignmentPanel({ guestId, reservationId, assignment, hors
         <label className="grid gap-1 text-sm font-medium text-stone-700">Saddle
           <select name="saddle" defaultValue={assignment?.saddle_id ?? ""} className="h-10 rounded-lg border bg-white px-3 text-sm">
             <option value="">Needs saddle assignment</option>
-            {saddles.map((saddle) => <option key={saddle.id} value={saddle.id}>{saddle.name}{saddle.saddle_number ? ` #${saddle.saddle_number}` : ""}</option>)}
+            {recommendations.map(({ saddle }) => <option key={saddle.id} value={saddle.id}>{saddle.name}{saddle.saddle_number ? ` #${saddle.saddle_number}` : ""} - recommended</option>)}
+            {saddles.filter((saddle) => !recommendedIds.has(saddle.id)).map((saddle) => <option key={saddle.id} value={saddle.id}>{saddle.name}{saddle.saddle_number ? ` #${saddle.saddle_number}` : ""}</option>)}
           </select>
+          {message ? <span className="text-xs text-orange-800">{message}</span> : <span className="text-xs text-emerald-700">Recommended for this guest: {recommendations[0]?.saddle.name}</span>}
         </label>
       </div>
       <label className="grid gap-1 text-sm font-medium text-stone-700">Riding ability

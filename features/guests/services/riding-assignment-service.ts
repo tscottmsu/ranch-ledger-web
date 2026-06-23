@@ -3,7 +3,8 @@ import "server-only";
 import { getCurrentRanchContext } from "@/features/ranch/services/ranch-context-service";
 import { createClient } from "@/lib/supabase/server";
 import type { Horse } from "@/features/horses/types";
-import type { ReservationGuestAssignment, Saddle } from "@/features/rides/types";
+import type { ReservationGuestAssignment } from "@/features/rides/types";
+import type { Saddle } from "@/features/saddles/types";
 
 async function requireRidingAssignmentManager() {
   const context = await getCurrentRanchContext();

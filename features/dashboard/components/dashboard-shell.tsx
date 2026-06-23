@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Activity, CalendarRange, Gauge, LogOut, Menu, Mountain, PawPrint, Settings, UserRound, Users, X } from "lucide-react";
+import { Activity, Armchair, CalendarRange, Gauge, LogOut, Menu, Mountain, PawPrint, Settings, UserRound, Users, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -16,6 +16,7 @@ const links = [
   { href: "/dashboard/guests", label: "Guests", icon: UserRound },
   { href: "/dashboard/employees", label: "Employees", icon: Users },
   { href: "/dashboard/horses", label: "Horses", icon: PawPrint },
+  { href: "/dashboard/saddles", label: "Saddles", icon: Armchair },
   { href: "/dashboard/trails", label: "Trails", icon: Mountain },
   { href: "/dashboard/activity-types", label: "Activity Types", icon: Activity },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },

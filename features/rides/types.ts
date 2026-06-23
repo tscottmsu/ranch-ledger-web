@@ -73,7 +73,7 @@ export type RideValidationWarning = {
 };
 
 export type RideOption = { id: string; name: string };
-export type Saddle = { id: string; ranch_id: string; name: string; saddle_number: string | null; type: string | null; seat_size: string | null; status: string; notes: string | null; archived_at: string | null; created_at: string; updated_at: string };
+export type Saddle = { id: string; ranch_id: string; name: string; saddle_number: string | null; type: string | null; seat_size: string | null; rider_height_min: number | null; rider_height_max: number | null; rider_weight_min: number | null; rider_weight_max: number | null; status: string; notes: string | null; archived_at: string | null; created_at: string; updated_at: string };
 export type ReservationGuestAssignment = { id: string; ranch_id: string; reservation_id: string; guest_id: string; horse_id: string | null; saddle_id: string | null; riding_ability: string | null; notes: string | null; assigned_by: string | null; created_at: string; updated_at: string };
 export type RideTrailOption = RideOption & { difficulty: string | null; estimated_duration_minutes: number | null };
 export type EligibleRideGuest = {
