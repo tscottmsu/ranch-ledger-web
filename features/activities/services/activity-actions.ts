@@ -1,0 +1,15 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { archiveActivity, createActivity, updateActivity, updateActivityStatus, type ActivityInput } from "./activity-service";
+import type { ActivityFormState, ActivityStatus } from "../types";
+
+const statuses: ActivityStatus[] = ["draft", "ready", "in_progress", "completed", "cancelled"];
+
+function parse(formData: FormData): { input?: ActivityInput; state?: ActivityFormState } { const value = (key: string) => String(formData.get(key) ?? "").trim(); const activityType = value("activityType"); const date = value("date"); const startTime = value("startTime"); const endTime = value("endTime"); const rawCapacity = value("capacity"); const capacity = rawCapacity ? Number(rawCapacity) : null; const fieldErrors: ActivityFormState["fieldErrors"] = {}; if (!activityType) fieldErrors.activityType = "Choose an activity type."; if (!date) fieldErrors.date = "Choose an activity date."; if (startTime && endTime && endTime <= startTime) fieldErrors.times = "End time must be after start time."; if (capacity !== null && (!Number.isInteger(capacity) || capacity <= 0)) fieldErrors.capacity = "Enter a positive whole number."; if (Object.keys(fieldErrors).length) return { state: { status: "error", fieldErrors } }; const requestedStatus = value("status") as ActivityStatus; return { input: { activity_type_id: activityType, trail_id: value("trail") || null, name: value("name") || null, activity_date: date, start_time: startTime || null, end_time: endTime || null, status: statuses.includes(requestedStatus) ? requestedStatus : "draft", capacity, notes: value("notes") || null } }; }
+function revalidateActivities() { revalidatePath("/dashboard/activities"); revalidatePath("/dashboard/operations"); revalidatePath("/dashboard"); }
+export async function createActivityAction(_state: ActivityFormState, formData: FormData): Promise<ActivityFormState> { const parsed = parse(formData); if (parsed.state) return parsed.state; const { error } = await createActivity(parsed.input!); if (error) return { status: "error", message: error.message }; revalidateActivities(); redirect("/dashboard/activities"); }
+export async function updateActivityAction(id: string, _state: ActivityFormState, formData: FormData): Promise<ActivityFormState> { const parsed = parse(formData); if (parsed.state) return parsed.state; const { error } = await updateActivity(id, parsed.input!); if (error) return { status: "error", message: error.message }; revalidateActivities(); redirect("/dashboard/activities"); }
+export async function updateActivityStatusAction(id: string, status: ActivityStatus) { if (!statuses.includes(status)) throw new Error("Invalid activity status."); const { error } = await updateActivityStatus(id, status); if (error) throw new Error("Unable to update activity status."); revalidateActivities(); }
+export async function archiveActivityAction(id: string) { const { error } = await archiveActivity(id); if (error) throw new Error("Unable to archive activity."); revalidateActivities(); }

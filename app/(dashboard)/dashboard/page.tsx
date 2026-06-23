@@ -4,10 +4,13 @@ import { redirect } from "next/navigation";
 import { SetupChecklist } from "@/features/dashboard/components/setup-checklist";
 import { WelcomePanel } from "@/features/dashboard/components/welcome-panel";
 import { getDashboardContext } from "@/features/dashboard/services/dashboard-service";
+import { getCurrentRanchContext } from "@/features/ranch/services/ranch-context-service";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
+  const ranchContext = await getCurrentRanchContext();
+  if (ranchContext?.role === "head_wrangler") redirect("/dashboard/operations");
   const context = await getDashboardContext();
   if (!context) redirect("/login");
   const firstName = String(context.user.user_metadata.first_name ?? "there");

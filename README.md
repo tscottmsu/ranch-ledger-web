@@ -11,6 +11,7 @@ Ranch Ledger is a ranch-scoped operations platform. The current foundation provi
    - `supabase/migrations/20260620010000_sprint_2_ranch_setup.sql`
    - `supabase/migrations/20260620020000_sprint_3_guests_reservations.sql`
    - `supabase/migrations/20260620030000_sprint_3_reservation_workflow_fixes.sql`
+   - `supabase/migrations/20260620040000_sprint_4_activities.sql`
 4. In **Authentication → URL Configuration**, set the local Site URL to `http://localhost:3000` and add `http://localhost:3000/auth/callback` as an allowed redirect URL. Add the equivalent production callback before deployment.
 5. Install dependencies and start the app:
 

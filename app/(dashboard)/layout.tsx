@@ -9,5 +9,5 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!user) redirect("/login");
   const ranch = await getCurrentRanchContext();
 
-  return <DashboardShell ranchName={ranch?.ranchName} email={user.email}>{children}</DashboardShell>;
+  return <DashboardShell ranchName={ranch?.ranchName} role={ranch?.role} email={user.email}>{children}</DashboardShell>;
 }
