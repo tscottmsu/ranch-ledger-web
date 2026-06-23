@@ -33,7 +33,7 @@ export function OperationsBoard({ snapshot }: { snapshot: RideOperationsSnapshot
     </section>
     <div className="grid gap-6 xl:grid-cols-[1fr_22rem]">
       <div className="space-y-6">
-        <CreateRideDialog date={snapshot.date} activityTypes={snapshot.activityTypes} trails={snapshot.trails} />
+        <CreateRideDialog date={snapshot.date} trails={snapshot.trails} />
         {snapshot.rides.length ? statusGroups.map((group) => {
           const rides = snapshot.rides.filter((ride) => ride.status === group.status);
           if (!rides.length) return null;

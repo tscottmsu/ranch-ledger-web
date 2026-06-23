@@ -50,10 +50,15 @@ function revalidateRides(rideId?: string) {
 
 export async function createRideAction(formData: FormData) {
   const input = parseRide(formData);
-  if (!input.activity_type_id) throw new Error("Create an active horseback ride setup item before building rides.");
   if (!input.ride_date) throw new Error("Ride date is required.");
-  const { data, error } = await createRide(input);
-  if (error) throw new Error(error.message);
+  let result: Awaited<ReturnType<typeof createRide>>;
+  try {
+    result = await createRide(input);
+  } catch {
+    throw new Error("Ranch Ledger could not create this ride. Please try again.");
+  }
+  const { data, error } = result;
+  if (error) throw new Error("Ranch Ledger could not create this ride. Please try again.");
   await regenerateValidationWarnings(data.id);
   revalidateRides(data.id);
   redirect(`/dashboard/rides/${data.id}`);

@@ -20,6 +20,7 @@ import {
   upsertHorseAssignment,
   upsertWranglerAssignment,
 } from "./ride-repository";
+import { ensureHorsebackRideSetupForRanch } from "./ride-setup-service";
 import { saveRideValidationWarnings } from "./ride-validation-service";
 
 export type RideInput = {
@@ -62,6 +63,7 @@ export async function getRideById(rideId: string) {
 export async function getTodaysRideOperations() {
   const context = await requireRideOperationsManager();
   const date = currentDateInTimezone(context.timezone);
+  await ensureHorsebackRideSetupForRanch(context.ranchId);
   const [rides, options, eligibleGuests, availableHorses, availableWranglers] = await Promise.all([
     findRidesForDate(context.ranchId, date),
     findRideOptions(context.ranchId),
@@ -105,7 +107,8 @@ export async function getRideBuilderData(rideId: string) {
 
 export async function createRide(input: RideInput) {
   const { ranchId } = await requireRideOperationsManager();
-  return insertRide(ranchId, input);
+  const activityTypeId = input.activity_type_id || await ensureHorsebackRideSetupForRanch(ranchId);
+  return insertRide(ranchId, { ...input, activity_type_id: activityTypeId });
 }
 
 export async function updateRide(rideId: string, input: Partial<RideInput>) {
